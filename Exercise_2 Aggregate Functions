@@ -1,0 +1,53 @@
+-- step 1: CREATE A CATALOG 
+CREATE  CATALOG IF NOT EXISTS exercise2;
+
+--Step 2: Create a schema 
+CREATE  SCHEMA IF NOT EXISTS exercise2.default;
+
+--step 3: Create a table 
+CREATE TABLE IF NOT EXISTS exercise2.default.sales (
+sale_id INT,
+product STRING,
+category STRING,
+Quantity INT,
+Price INT
+);
+
+--step 4: Insert the data into the table
+INSERT INTO exercise2.default.sales
+VALUES
+(1,'Laptop','Electronics',2,800),
+(2,'Mouse','Electronics',5,20),
+(3,'Keyboard','Electronics',3,50),
+(4,'Desk','Furniture',2,300),
+(5,'Chair','Furniture',4,150),
+(6,'Monitor','Electronics',2,400);
+
+--Question 1:COUNT:How many sales records are in the table?
+SELECT COUNT(*) AS Total_sales
+FROM exercise2.default.sales;
+
+--Question 2: SUM:What is the total quantity of products sold?
+  SELECT SUM(Quantity ) AS Total_quantity 
+  FROM exercise2.default.sales;
+
+  --Question 3: AVG:What is the average product price?
+  SELECT AVG(Price) AS Average_price
+  FROM exercise2.default.sales;
+
+--Question 4: MIN:What is the lowest product price?
+SELECT MIN(Price) AS Lowest_price 
+FROM exercise2.default.sales;
+
+--Question 5: MAX: What is the highest product price? 
+SELECT MAX(Price) AS highest_price 
+FROM exercise2.default.sales;
+
+--Question 6: SUM: What is the total revenue?
+SELECT SUM(Quantity * Price) AS Total_revenue 
+FROM exercise2.default.sales;
+
+--  Question 7:GROUP BY: Total quantity sold for each category 
+SELECT category, SUM(Quantity) AS Total_quantity
+FROM exercise2.default.sales
+GROUP BY category;
