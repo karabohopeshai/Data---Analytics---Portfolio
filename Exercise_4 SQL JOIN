@@ -1,0 +1,211 @@
+--Step 1: CREATE A CATALOG
+CREATE CATALOG IF NOT EXISTS exercise4;
+
+--Step 2: Create a Schema 
+CREATE SCHEMA IF NOT EXISTS exercise4.brightlearn;
+
+--Step 3:Create a Table 
+CREATE OR REPLACE TABLE exercise4.brightlearn.users (
+User_id INT,
+User_name STRING,
+Country STRING
+);
+
+--Step 4: Insert the data into the table 
+INSERT INTO TABLE exercise4.brightlearn.users VALUES 
+(1,'Nomvula','Johannesburg'),
+(2,'David','Cape Towm'),
+(3,'Anele','Durban'),
+(4,'Kabelo','Pretoria'),
+(5,'Lerato','Port Elizabeth');
+
+--Step 5: Create a table
+CREATE OR REPLACE TABLE exercise4.brightlearn.plans (
+Plan_id INT,
+Plan_name STRING,
+Monthly_price INT
+);
+
+-- Step 6: Insert the data into the table 
+INSERT INTO TABLE exercise4.brightlearn.plans VALUES 
+(10,'Basic',79),
+(11,'Standard',129),
+(12,'Premium',199),
+(13,'Family',249),
+(14,'Mobile',59);
+
+--Step 7: Create a table 
+CREATE OR REPLACE TABLE exercise4.brightlearn.subscriptions (
+Subscription_id INT,
+User_id INT,
+Plan_id INT,
+Start_date DATE
+);
+
+
+--Step 8: Insert the data into the table 
+INSERT INTO TABLE exercise4.brightlearn.subscriptions VALUES
+(501,1,10,'2026-01-15'),
+(502,2,11,'2026-02-01'),
+(503,1,12,'2026-03-10'),
+(504,6,11,'2026-03-20'),
+(505,3,13,'2026-04-05');
+
+--Step 9: Create a table 
+CREATE OR REPLACE TABLE exercise4.brightlearn.shows (
+Show_id INT,
+Show_title STRING,
+Genre STRING
+);
+
+--Step 10: Insert the data into the table 
+INSERT INTO TABLE exercise4.brightlearn.shows VALUES
+(701,'Comedy Hour','Comedy'),
+(702,'Crime Time','Drama'),
+(703,'Tech Table','Documentary'),
+(704,'Cooking Lab','Lifestyle'),
+(705,'Wild Earth','Documentary');
+
+--Step 11: Create a table 
+CREATE OR REPLACE TABLE exercise4.brightlearn.sessions (
+Session_id INT,
+User_id INT,
+Show_id INT,
+Watch_Minutes INT
+);
+
+--Step 12: Insert the data into the table 
+INSERT INTO TABLE exercise4.brightlearn.sessions VALUES
+(901,1,701,45),
+(902,2,703,30),
+(903,1,702,60),
+(904,7,701,20),
+(905,3,705,90);
+
+-- Question 1:Show every user who has a subscription.Match users to subscriptions
+SELECT DISTINCT u.User_id,
+u.User_name,
+s.Subscription_id,
+s.Start_date
+FROM exercise4.brightlearn.users u
+INNER JOIN exercise4.brightlearn.subscriptions s ON u.User_id = s.User_id;
+
+--Question 2:Show every subscription with its matching plan name and monthly price 
+SELECT DISTINCT s.Subscription_id,
+s.User_id,
+p.Plan_name,
+p.Monthly_price
+FROM exercise4.brightlearn.subscriptions s
+INNER JOIN exercise4.brightlearn.plans p ON s.Plan_id = p.Plan_id;
+
+--Question 3: Show every viewing session that has a matching show.Include the show title and genre
+SELECT  v.Session_id, 
+       v.User_id,
+       sh.Show_title,
+       sh.Genre,
+       v.Watch_Minutes
+FROM exercise4.brightlearn.sessions v
+INNER JOIN exercise4.brightlearn.shows sh ON v.Show_id = sh.Show_id;
+
+--Question 4:Show every viewing session with the user who watched it . Only show sessions with matching user 
+SELECT DISTINCT u.User_name,
+       u.Country,
+       v.Session_id,
+       v.Watch_Minutes
+FROM exercise4.brightlearn.users u
+INNER JOIN exercise4.brightlearn.sessions v ON u.User_id = v.User_id;
+
+--Question 5:Show users along with their subscription plan name and the price . Use only users who have both a subscription and a valid plan 
+SELECT DISTINCT u.User_name,
+       u.Country,
+       p.Plan_name,
+       p.Monthly_price,
+       s.Start_date
+FROM exercise4.brightlearn.users u
+INNER JOIN exercise4.brightlearn.subscriptions s ON u.User_id = s.User_id
+INNER JOIN exercise4.brightlearn.plans p ON s.Plan_id = p.Plan_id;
+
+--Question 6:Show every user and any subscriptions they have . Users without subscriptions must still appear
+SELECT DISTINCT u.User_id,
+       u.User_name,
+       s.Subscription_id,
+       s.Start_date
+FROM exercise4.brightlearn.users u
+LEFT JOIN exercise4.brightlearn.subscriptions s ON u.User_id = s.User_id;
+
+--Question 7:Show every plan and the subscriptions on it .Plans with no subscribers must still appear
+SELECT DISTINCT p.Plan_id,
+       p.Plan_name,
+       s.Subscription_id,
+       s.User_id
+FROM exercise4.brightlearn.plans p
+LEFT JOIN exercise4.brightlearn.subscriptions s ON p.Plan_id = s.Plan_id;
+
+--Question 8:Show every show and any viewing session on it . Shows that were never watched must still appear
+SELECT DISTINCT sh.Show_id,
+       sh.Show_title,
+       v.Session_id,
+       v.Watch_Minutes
+FROM exercise4.brightlearn.shows sh
+LEFT JOIN exercise4.brightlearn.sessions v ON sh .show_id = v.Show_id;
+
+--Question 9:Show every viewing session and the user who watched it .Sessions referencing users that do not exist must still appear (with null user details)
+SELECT DISTINCT v.Session_id,
+       v.Show_id,
+       v.Watch_Minutes,
+       u.User_id,
+       u.User_name
+FROM exercise4.brightlearn.sessions v
+LEFT JOIN exercise4.brightlearn.users u ON v.User_id = u.User_id
+
+--Question 10: Show every user , the plan they are on (if any), and the monthly price .Users without a subscription must still appear
+SELECT DISTINCT u.User_name,
+       u.country,
+       p.Plan_name,
+       p.Monthly_price
+FROM exercise4.brightlearn.users u
+LEFT JOIN exercise4.brightlearn.subscriptions s ON u.User_id = s.User_id
+LEFT JOIN exercise4.brightlearn.plans p ON s.Plan_id = p.Plan_id;
+
+--Question 11: Show every user and every subscription , including users without subscriptions AND subscriptions referencing users that do not exist
+SELECT DISTINCT u.User_id,
+       u.User_name,
+       s.Subscription_id,
+       s.Start_date
+FROM exercise4.brightlearn.users u
+FULL OUTER JOIN exercise4.brightlearn.subscriptions s ON u.User_id = s.User_id;
+
+--Question 12: Show every plan and every subscription , including plans without subscribers AND subscribers referencing plans that do not exist
+SELECT DISTINCT p.Plan_id,
+       p.Plan_name,
+       s.Subscription_id,
+       s.User_id
+FROM exercise4.brightlearn.plans p
+FULL OUTER JOIN exercise4.brightlearn.subscriptions s ON p.Plan_id = s.Plan_id;
+
+--Question 13: Show every show and every viewing session , including shows without sessions AND sessionsreferencing shows that do not exist
+SELECT DISTINCT s.Show_id,
+       s.Show_title,
+       v.Session_id,
+       v.Watch_Minutes
+FROM exercise4.brightlearn.shows s
+FULL OUTER JOIN exercise4.brightlearn.sessions v ON s.Show_id = v.Show_id;
+
+--Question 14:Show every user and every viewing session , including users with no sessions AND sessions referencing users who do not exist 
+SELECT DISTINCT COALESCE(u.User_id, v.User_id) AS User_id,
+       u.User_name,
+       v.Session_id,
+       v.Show_id,
+       v.Watch_Minutes
+FROM exercise4.brightlearn.users u
+FULL OUTER JOIN exercise4.brightlearn.sessions v ON u.User_id = v.User_id;
+
+--Question 15: Show every plan and every subscription and every plan in one query - using FULL OUTER JOIN throughout.This is hardest question -get all gaps visible at once 
+SELECT DISTINCT u.User_id,
+       u.User_name,
+       s.Subscription_id,
+       COALESCE(s.Plan_id, p.Plan_id) AS Plan_id,
+       p.Plan_name
+FROM exercise4.brightlearn.users u
+FULL OUTER JOIN exercise4.brightlearn.subscriptions s ON u.user_id = s.user_id
+FULL OUTER JOIN exercise4.brightlearn.plans p ON s.Plan_id = p.Plan_id;
