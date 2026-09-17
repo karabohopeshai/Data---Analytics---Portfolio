@@ -1,0 +1,267 @@
+-- Step 1: CREATE A Catalog
+CREATE CATALOG IF NOT EXISTS exercise3;
+
+--Step 2: Create a schema
+CREATE SCHEMA IF NOT EXISTS exercise3.class;
+
+-- STEP 3: CREATE a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (
+    Product_id INT,
+    product_name STRING,
+    Price DECIMAL(10,2)
+);
+
+-- Step 4:Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,'Laptop',1200.00),
+(2,'Phone',800.00),
+(3,'Keyboard',45.00),
+(4,'Monitor',300.00),
+(5,'Mouse',25.00);
+
+-- Question 1:Classify each product by price into the three tiers below
+SELECT 
+    product_name,
+    price,
+    CASE
+        WHEN price > 1000 THEN 'Expensive'
+        WHEN price BETWEEN 100 AND 1000 THEN 'Mid-range'
+        WHEN price < 100 THEN 'Budget'
+    END AS price_category
+FROM exercise3.class.attedance_brightlearn;
+
+--Step 5: CREATE a table
+create or replace table exercise3.class.attendance_brightlearn(Order_id INT, Customer_name STRING , Amount DECIMAL);
+
+-- Step 6: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attendance_brightlearn VALUES
+(1,'Alice',150.00),
+(2,'Bob',560.00),
+(3,'Charlie',999.00),
+(4,'Diana',45.50),
+(5,'Ethan',1200.00);
+
+
+--Question 2:Label each order by its value 
+SELECT
+    customer_name,
+    amount,
+    CASE
+        WHEN amount >= 1000 THEN 'High Value'
+        WHEN amount BETWEEN 500 AND 999.99 THEN 'Medium Value'
+        WHEN amount < 500 THEN 'Low Value'
+    END AS order_value_category
+FROM exercise3.class.attendance_brightlearn;
+
+--Step 7: Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn(Emp_id INT, Emp_name STRING,Department STRING , Salary INT );
+
+--Step 8: Insert the data into the table
+    INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+    (1,'John','IT',85000),
+    (2,'Sara','HR',60000),
+    (3,'Mark','IT',75000),
+    (4,'Lucy','Finance',95000),
+    (5,'Tom','HR',55000);
+
+--Question 3: Categorize each employee's position level using both department and salary 
+SELECT
+    Emp_name,
+    Department,
+    Salary,
+    CASE
+        WHEN Department = 'IT' AND Salary > 80000 THEN 'Senior IT'
+        WHEN Department = 'HR' AND Salary > 55000 THEN 'Experienced HR'
+        ELSE 'Staff'
+    END AS position_level
+FROM exercise3.class.attedance_brightlearn;
+
+    --Step 9:Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (
+    Student_id INT,
+    Student_name STRING,
+    Score INT
+);
+
+-- Step 10: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,'Anna',92),
+(2,'Ben',76),
+(3,'Cara',59),
+(4,'Dana',83),
+(5,'Ella',68);
+
+--Question 4: Assign each student a letter grade based on their score
+SELECT Student_name,
+ Score,
+ CASE 
+    WHEN Score >= 90 THEN 'A'
+    WHEN Score BETWEEN 80 AND 89 THEN 'B'
+    WHEN Score BETWEEN 70 AND 79 THEN 'C'
+    WHEN Score BETWEEN 60 AND 69 THEN 'D'
+    WHEN Score < 60 THEN 'F'
+END AS Grade
+FROM exercise3.class.attedance_brightlearn;
+
+-- Step 11: Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (
+ delivery_id INT,
+ delivery_time_minutes INT
+);
+
+--Step 12: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,40),
+(2,80),
+(3,30),
+(4,65),
+(5,100);
+
+--Question 5: Label delivery performance as based on the time taken to complete the delivery
+SELECT
+    delivery_id,
+    delivery_time_minutes,
+    CASE
+        WHEN delivery_time_minutes <= 30 THEN 'Fast'
+        WHEN delivery_time_minutes BETWEEN 31 AND 60 THEN 'On Time'
+        WHEN delivery_time_minutes > 60 THEN 'Late'
+    END AS performance
+FROM exercise3.class.attedance_brightlearn;
+
+--Step 13: Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (
+    Ticket_id INT,
+    Issue_type STRING,
+    Priority INT
+);
+
+--Step 14: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,'Login issue',1),
+(2,'Server Down',3),
+(3,'Slow System',2),
+(4,'Email Error',2),
+(5,'Password',1);
+
+--Question 6: Convert the numeric priority into a readable label 
+SELECT
+    issue_type,
+    priority,
+    CASE
+        WHEN priority = 3 THEN 'High'
+        WHEN priority = 2 THEN 'Medium'
+        WHEN priority = 1 THEN 'Low'
+    END AS priority_label
+FROM exercise3.class.attedance_brightlearn;
+
+--Step 15: Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (
+    Student_id INT,
+    days_present INT,
+    Total_days INT
+);
+
+-- Step 16: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,45,50),
+(2,30,50),
+(3,48,50),
+(4,25,50),
+(5,50,50);
+
+--Question 7: Calculate the attendance percentage and classify the results 
+SELECT
+    student_id,
+    (days_present * 100.0 / total_days) AS attendance_percentage,
+    CASE
+        WHEN (days_present * 100.0 / total_days) >=90 THEN 'Excellent'
+        WHEN (days_present * 100.0 / total_days) BETWEEN 75 AND 89.99 THEN 'Good'
+        WHEN (days_present * 100.0 / total_days) < 75 THEN 'Needs Improvement'
+    END AS attendance_status
+FROM VALUES
+(1, 45, 50),
+(2, 30, 50),
+(3, 48, 50),
+(4, 25, 50),
+(5, 50, 50)
+AS attendance_data(student_id, days_present, total_days);
+
+--Step 17: Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (Product_id INT, Stock_qty INT, Stock_status STRING);
+
+-- Step 18: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,5,NULL),
+(2,0,NULL),
+(3,25,NULL),
+(4,10,NULL),
+(5,3,NULL);
+ 
+--Question 8:Label the stock of each product
+SELECT
+    product_id,
+    stock_qty,
+    CASE
+        WHEN stock_qty = 0 THEN 'Out of Stock'
+        WHEN stock_qty BETWEEN 1 AND 5 THEN 'Low Stock'
+        WHEN stock_qty > 5 THEN 'In Stock'
+    END AS stock_status
+FROM exercise3.class.attedance_brightlearn;
+
+--Step 19: Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (
+    class_id INT,
+    subject STRING,
+    Enrolled_students INT
+);
+
+    --Step 20: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,'Math',30),
+(2,'English',25),
+(3,'Science',15),
+(4,'Art',5),
+(5,'History',20);
+
+--Question 9: Classify each class by the number of enrolled students
+SELECT
+    subject,
+    enrolled_students
+    CASE
+     WHEN enrolled_students >= 25 THEN 'Large',
+     WHEN enrolled_students BETWEEN 10 AND 24 THEN 'Medium',
+     WHEN enrolled_students < 10 THEN 'Small',
+    END AS class_size_category
+FROM exercise3.class.attedance_brightlearn;
+
+--Step 21: Create a table
+CREATE OR REPLACE TABLE exercise3.class.attedance_brightlearn (
+    Payment_id INT,
+    Amount Decimal (10,2),
+    Payment_method STRING
+);
+
+    --Step 22: Insert the data into the table
+INSERT INTO TABLE exercise3.class.attedance_brightlearn VALUES
+(1,50.00,'Card'),
+(2,200.00,'Cash'),
+(3,150.00,'Card'),
+(4,75.00,'Paypal'),
+(5,300.00,'Cash');
+
+--Question 10: Apply a discount flag based on the payment method and amount 
+SELECT
+    payment_id,
+    payment_method,
+    amount,
+    CASE
+        WHEN payment_method = 'Cash' AND amount >= 200 THEN 'Eligible for Discount'
+        ELSE 'Not Eligible'
+    END AS discount_eligibility
+FROM exercise3.class.attedance_brightlearn;
+
+
+
+
+
+
